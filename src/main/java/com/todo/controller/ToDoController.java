@@ -12,10 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +32,8 @@ public class ToDoController {
     public Mono<ResponseEntity<ActivityResponse>> createActivity(@RequestBody CreateRequest request) {
         return toDoService.createActivity(request)
                 .map(this::toResponse)
-                .map(response -> new ResponseEntity<>(response, HttpStatus.OK));
+                .map(response -> new ResponseEntity<>(response, HttpStatus.OK))
+                .subscribeOn(Schedulers.boundedElastic());
     }
 
     @ApiOperation("View all activities")
@@ -43,7 +43,8 @@ public class ToDoController {
     public Mono<ResponseEntity<List<ActivityResponse>>> viewActivities() {
         return toDoService.getAllActivities()
                 .map(list -> list.stream().map(this::toResponse).collect(Collectors.toList()))
-                .map(response -> new ResponseEntity<>(response, HttpStatus.OK));
+                .map(response -> new ResponseEntity<>(response, HttpStatus.OK))
+                .subscribeOn(Schedulers.boundedElastic());
     }
 
     @ApiOperation("Update activity by id")
@@ -53,7 +54,8 @@ public class ToDoController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<Boolean>> updateActivityById(@PathVariable String id, @RequestBody UpdateRequest request) {
         return toDoService.updateActivityById(id, request)
-                .map(response -> new ResponseEntity<>(response, HttpStatus.OK));
+                .map(response -> new ResponseEntity<>(response, HttpStatus.OK))
+                .subscribeOn(Schedulers.boundedElastic());
     }
 
     @ApiOperation("Delete activity by id")
@@ -62,7 +64,8 @@ public class ToDoController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<Boolean>> deleteActivityById(@PathVariable String id) {
         return toDoService.deleteActivityById(id)
-                .map(response -> new ResponseEntity<>(response, HttpStatus.OK));
+                .map(response -> new ResponseEntity<>(response, HttpStatus.OK))
+                .subscribeOn(Schedulers.boundedElastic());
     }
 
     private ActivityResponse toResponse(Activity response) {
