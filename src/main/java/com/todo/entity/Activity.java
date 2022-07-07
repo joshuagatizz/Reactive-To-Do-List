@@ -13,8 +13,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @Document
 public class Activity {
-    @Id
-    private String id;
-    private String content;
-    private Boolean isCompleted;
+  @Id
+  private String id;
+  private String content;
+  private Boolean isCompleted;
 }

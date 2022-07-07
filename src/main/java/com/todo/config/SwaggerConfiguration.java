@@ -20,28 +20,28 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfiguration implements WebFluxConfigurer {
 
-    @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
-                .build()
-                .apiInfo(buildApiInfo())
-                .useDefaultResponseMessages(false);
-    }
+  @Bean
+  public Docket api() {
+    return new Docket(DocumentationType.SWAGGER_2)
+        .select()
+        .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
+        .build()
+        .apiInfo(buildApiInfo())
+        .useDefaultResponseMessages(false);
+  }
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("swagger-ui.html")
-                .addResourceLocations("classpath:/META-INF/resources");
-        registry.addResourceHandler("/webjars/**")
-                .addResourceLocations("classpath:/META-INF/resources/webjars/");
-    }
+  @Override
+  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    registry.addResourceHandler("swagger-ui.html")
+        .addResourceLocations("classpath:/META-INF/resources");
+    registry.addResourceHandler("/webjars/**")
+        .addResourceLocations("classpath:/META-INF/resources/webjars/");
+  }
 
-    private ApiInfo buildApiInfo() {
-        return new ApiInfoBuilder()
-                .title("Reactive To-Do List")
-                .version("0.0.1")
-                .build();
-    }
+  private ApiInfo buildApiInfo() {
+    return new ApiInfoBuilder()
+        .title("Reactive To-Do List")
+        .version("0.0.1")
+        .build();
+  }
 }
