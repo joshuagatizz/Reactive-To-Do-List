@@ -1,17 +1,25 @@
 package com.todo.controller;
 
-import com.todo.entity.Activity;
-import com.todo.model.CreateUpdateRequest;
 import com.todo.model.ActivityResponse;
+import com.todo.model.CreateRequest;
+import com.todo.model.Response;
+import com.todo.model.UpdateRequest;
 import com.todo.service.ToDoService;
+import com.todo.service.helper.ActivityHelper;
+import com.todo.service.helper.ResponseHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
@@ -28,86 +36,60 @@ public class ToDoController {
 
   @ApiOperation("Add new activity")
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-  public Mono<ResponseEntity<ActivityResponse>> createActivity(@RequestBody CreateUpdateRequest request) {
+  public Mono<Response<ActivityResponse>> createActivity(@RequestBody CreateRequest request) {
     log.info("#CreateActivity with request : {}", request);
     return toDoService.createActivity(request)
-        .map(this::toResponse)
-        .map(response -> new ResponseEntity<>(response, HttpStatus.OK))
+        .map(ActivityHelper::constructActivityResponse)
+        .map(ResponseHelper::ok)
         .subscribeOn(Schedulers.boundedElastic());
   }
 
   @ApiOperation("View all activities")
   @GetMapping
-  public Mono<ResponseEntity<List<ActivityResponse>>> viewAllActivities() {
+  public Mono<Response<List<ActivityResponse>>> viewAllActivities() {
     log.info("#ViewAllActivities");
     return toDoService.getAllActivities()
-        .map(list -> list.stream().map(this::toResponse).collect(Collectors.toList()))
-        .map(response -> new ResponseEntity<>(response, HttpStatus.OK))
+        .map(list -> list.stream()
+            .map(ActivityHelper::constructActivityResponse)
+            .collect(Collectors.toList()))
+        .map(ResponseHelper::ok)
         .subscribeOn(Schedulers.boundedElastic());
   }
 
   @ApiOperation("View activity by id")
   @GetMapping(path = "/{id}")
-  public Mono<ResponseEntity<ActivityResponse>> viewActivityById(@PathVariable String id) {
+  public Mono<Response<ActivityResponse>> viewActivityById(@PathVariable String id) {
     log.info("#ViewActivity by Id : {}", id);
     return toDoService.getActivityById(id)
-        .map(this::toResponse)
-        .map(response -> new ResponseEntity<>(response, HttpStatus.OK))
-        .subscribeOn(Schedulers.boundedElastic());
-  }
-
-  @ApiOperation("View activities by content")
-  @GetMapping(path = "/find")
-  public Mono<ResponseEntity<List<ActivityResponse>>> viewActivitiesByContent(@RequestParam String content) {
-    log.info("#ViewActivity by Content : {}", content);
-    return toDoService.getActivitiesByContent(content)
-        .map(list -> list.stream().map(this::toResponse).collect(Collectors.toList()))
-        .map(response -> new ResponseEntity<>(response, HttpStatus.OK))
+        .map(ActivityHelper::constructActivityResponse)
+        .map(ResponseHelper::ok)
         .subscribeOn(Schedulers.boundedElastic());
   }
 
   @ApiOperation("Update activity by id")
   @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-  public Mono<ResponseEntity<Boolean>> updateActivityById(@PathVariable String id, @RequestBody CreateUpdateRequest request) {
+  public Mono<Response<Boolean>> updateActivityById(@PathVariable String id, @RequestBody UpdateRequest request) {
     log.info("#UpdateActiviy by Id : {} with request : {}", id, request);
     return toDoService.updateActivityById(id, request)
-        .map(response -> new ResponseEntity<>(response, HttpStatus.OK))
-        .subscribeOn(Schedulers.boundedElastic());
-  }
-
-  @ApiOperation("Update activity status")
-  @PutMapping(path = "/{id}")
-  public Mono<ResponseEntity<Boolean>> updateActivityStatus(@PathVariable String id) {
-    log.info("#UpdateStatus by Id : {}", id);
-    return toDoService.updateActivityStatus(id)
-        .map(response -> new ResponseEntity<>(response, HttpStatus.OK))
+        .map(ResponseHelper::ok)
         .subscribeOn(Schedulers.boundedElastic());
   }
 
   @ApiOperation("Delete activity by id")
   @DeleteMapping(path = "/{id}")
-  public Mono<ResponseEntity<Boolean>> deleteActivityById(@PathVariable String id) {
+  public Mono<Response<Boolean>> deleteActivityById(@PathVariable String id) {
     log.info("#DeleteActivity by Id : {}", id);
     return toDoService.deleteActivityById(id)
-        .map(response -> new ResponseEntity<>(response, HttpStatus.OK))
+        .map(ResponseHelper::ok)
         .subscribeOn(Schedulers.boundedElastic());
   }
 
   @ApiOperation("Delete all activities")
   @DeleteMapping
-  public Mono<ResponseEntity<Boolean>> deleteAllActivities() {
+  public Mono<Response<Boolean>> deleteAllActivities() {
     log.info("#DeleteAllActivities");
     return toDoService.deleteAllActivities()
-        .map(response -> new ResponseEntity<>(response, HttpStatus.OK))
+        .map(ResponseHelper::ok)
         .subscribeOn(Schedulers.boundedElastic());
   }
-
-  private ActivityResponse toResponse(Activity response) {
-    return ActivityResponse.builder()
-        .id(response.getId())
-        .content(response.getContent())
-        .isCompleted(response.getIsCompleted())
-        .build();
-  }
-
 }

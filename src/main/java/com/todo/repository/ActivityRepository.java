@@ -6,8 +6,10 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
+
 @Repository
 public interface ActivityRepository extends ReactiveMongoRepository<Activity, String> {
-  Mono<Activity> findActivityByContent(String content);
+  Mono<Activity> findActivityByContentEquals(String Id);
   Flux<Activity> findActivitiesByContentLike(String content);
 }

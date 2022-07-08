@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateUpdateRequest {
+public class UpdateRequest {
   String content;
+  Boolean isCompleted;
 }
