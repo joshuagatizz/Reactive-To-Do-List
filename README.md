@@ -1,3 +1,3 @@
 # Reactive-To-Do-List
 
-a todolist app backend made with Java Spring framework and Reactor for reactive programming.
+A Todolist app backend made with Java Spring framework and Reactor for reactive programming.
