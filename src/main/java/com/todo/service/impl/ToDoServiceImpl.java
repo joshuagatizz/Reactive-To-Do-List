@@ -27,7 +27,8 @@ public class ToDoServiceImpl implements ToDoService {
   public Mono<Activity> createActivity(CreateRequest request) {
     return activityRepository.findActivityByContentEquals(request.getContent())
         .doOnNext(data -> {
-          if (!ObjectUtils.isEmpty(data)) throw new CustomException(ResponseStatusCode.DUPLICATE_DATA);
+          if (!ObjectUtils.isEmpty(data))
+            throw new CustomException(ResponseStatusCode.DUPLICATE_DATA);
         })
         .switchIfEmpty(activityRepository.save(ActivityHelper.constructActivity(request)))
         .doOnError(e -> log.error("Error when #CreateActivity with request : {} and message : ", request, e));

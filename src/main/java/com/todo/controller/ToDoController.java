@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,7 @@ public class ToDoController {
 
   @ApiOperation("Add new activity")
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-  public Mono<Response<ActivityResponse>> createActivity(@RequestBody CreateRequest request) {
+  public Mono<Response<ActivityResponse>> createActivity(@RequestBody @Valid CreateRequest request) {
     log.info("#CreateActivity with request : {}", request);
     return toDoService.createActivity(request)
         .map(ActivityHelper::constructActivityResponse)
@@ -68,8 +69,8 @@ public class ToDoController {
 
   @ApiOperation("Update activity by id")
   @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-  public Mono<Response<Boolean>> updateActivityById(@PathVariable String id, @RequestBody UpdateRequest request) {
-    log.info("#UpdateActiviy by Id : {} with request : {}", id, request);
+  public Mono<Response<Boolean>> updateActivityById(@PathVariable String id, @RequestBody @Valid UpdateRequest request) {
+    log.info("#UpdateActivity by Id : {} with request : {}", id, request);
     return toDoService.updateActivityById(id, request)
         .map(ResponseHelper::ok)
         .subscribeOn(Schedulers.boundedElastic());
