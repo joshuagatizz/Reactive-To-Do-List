@@ -47,13 +47,13 @@ public class ErrorHandlerController {
 
   @ExceptionHandler({CustomException.class})
   public ResponseEntity<Response<Object>> handleCustomException(CustomException ex) {
-    Response<Object> response = Response.builder()
-        .code(ex.getCode())
-        .status(ex.getStatus().name())
-        .errors(Collections.singletonList(ex.getMessage()))
-        .build();
-
-    return new ResponseEntity<>(response, ex.getStatus());
+    return ResponseEntity
+        .status(ex.getStatus())
+        .body(Response.builder()
+            .code(ex.getCode())
+            .status(ex.getStatus().name())
+            .errors(Collections.singletonList(ex.getMessage()))
+            .build());
   }
 
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

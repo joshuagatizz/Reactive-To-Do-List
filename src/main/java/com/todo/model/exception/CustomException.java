@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class CustomException extends RuntimeException {
+
   private Integer code;
   private HttpStatus status;
   private String message;

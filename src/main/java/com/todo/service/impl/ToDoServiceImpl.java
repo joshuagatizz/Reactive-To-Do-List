@@ -63,7 +63,7 @@ public class ToDoServiceImpl implements ToDoService {
         .switchIfEmpty(Mono.error(new CustomException(ResponseStatusCode.NOT_FOUND)))
         .doOnNext(data -> data.setContent(request.getContent()))
         .doOnNext(data -> data.setIsCompleted(request.getIsCompleted()))
-        .flatMap(data -> activityRepository.save(data))
+        .flatMap(activityRepository::save)
         .hasElement()
         .doOnError(e -> log.error("Error when #UpdateActivity by Id : {} with request : {} and message :", id, request, e));
   }
