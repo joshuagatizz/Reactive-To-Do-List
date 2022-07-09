@@ -52,11 +52,11 @@ public abstract class ToDoBaseIntegrationTest {
     return objectMapper.writeValueAsString(obj);
   }
 
-  public <T> T fromJson(String json, TypeReference<T> typeReference) throws JsonProcessingException {
+  protected <T> T fromJson(String json, TypeReference<T> typeReference) throws JsonProcessingException {
     return objectMapper.readValue(json, typeReference);
   }
 
-  public <T> Consumer<EntityExchangeResult<byte[]>> mapAndAssert(
+  protected <T> Consumer<EntityExchangeResult<byte[]>> mapAndAssert(
       TypeReference<T> typeReference, Consumer<T> assertion) {
     return entityExchangeResult -> {
       try {
