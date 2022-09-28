@@ -3,7 +3,6 @@ package com.todo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.todo.entity.Activity;
 import com.todo.repository.ActivityRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestInstance;
