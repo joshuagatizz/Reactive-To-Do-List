@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.todo.repository.ActivityRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -25,6 +26,7 @@ import java.util.function.Consumer;
 @ExtendWith(SpringExtension.class)
 @ComponentScan(basePackages = "com.todo")
 @TestPropertySource({"/application-test.properties"})
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class ToDoBaseIntegrationTest {
 
   @Autowired
